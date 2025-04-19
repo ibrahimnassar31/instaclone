@@ -11,6 +11,7 @@ import connectDB from './utils/db.js';
 import {app,server} from './socket/socket.js';
 import userRoutes from './routes/user.routes.js';
 import postRoutes from './routes/post.routes.js';
+import messageRoute from "./routes/message.routes.js";
 // تحميل متغيرات البيئة
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use(errorMiddleware);
 // مسارات API
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/posts', postRoutes);
+app.use("/api/v1/message", messageRoute);
 
 app.use(limiter);
 
