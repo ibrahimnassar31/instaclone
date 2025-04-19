@@ -36,12 +36,20 @@ router.post("/login", login);
  */
 router.post("/logout", logout);
 
+
+/**
+ * @route   GET /api/v1/users/suggestions
+ * @desc    Get suggested users to follow
+ * @access  Private
+ */
+router.get("/suggestions", isAuthenticated, getSuggestedUsers);
+
 /**
  * @route   GET /api/v1/users/:id
  * @desc    Get user profile by ID
  * @access  Private
  */
-router.get("/:id", isAuthenticated, getProfile);
+router.get("/profile/:id", isAuthenticated, getProfile);
 
 /**
  * @route   PUT /api/v1/users/profile
@@ -51,16 +59,10 @@ router.get("/:id", isAuthenticated, getProfile);
 router.put(
   "/profile",
   isAuthenticated,
-  upload.single("profilePhoto"),
+  upload.single("profilePicture"),
   editProfile
 );
 
-/**
- * @route   GET /api/v1/users/suggestions
- * @desc    Get suggested users to follow
- * @access  Private
- */
-router.get("/suggestions", isAuthenticated, getSuggestedUsers);
 
 /**
  * @route   PATCH /api/v1/users/:id/follow
