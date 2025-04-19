@@ -1,8 +1,11 @@
+import {logger} from '../middlewares/logger.js';
+
 export const errorMiddleware = (err, req, res, next) => {
-    console.error(`❌ Error: ${err.message}`);
   
     const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
   
+    logger.error(`${req.method} ${req.url} - ${err.message}`);
+    
     res.status(statusCode).json({
       success: false,
       message: err.message || "Internal Server Error",
