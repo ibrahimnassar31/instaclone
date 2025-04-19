@@ -12,8 +12,15 @@ import {app,server} from './socket/socket.js';
 import userRoutes from './routes/user.routes.js';
 import postRoutes from './routes/post.routes.js';
 import messageRoute from "./routes/message.routes.js";
+import {logger} from './middlewares/logger.js';
 // تحميل متغيرات البيئة
 dotenv.config();
+
+const morganStream = {
+  write: (message) => logger.info(message.trim()),
+};
+
+app.use(morgan('combined', { stream: morganStream }));
 
 
 
