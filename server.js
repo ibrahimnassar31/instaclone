@@ -6,26 +6,20 @@ import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import http from 'http';
-import mongoose from 'mongoose';
-import { Server as SocketIOServer } from 'socket.io';
 import { errorMiddleware } from './middlewares/errorMidllerware.js';
 import connectDB from './utils/db.js';
-import setupSocket from './socket/socket.js';
+import {app,server} from './socket/socket.js';
 import userRoutes from './routes/user.routes.js';
-
+import postRoutes from './routes/post.routes.js';
 // تحميل متغيرات البيئة
 dotenv.config();
 
-// إنشاء تطبيق Express
-const app = express();
 
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100 // limit each IP to 100 requests per windowMs
 });
-
 
 // ميدل وير
 app.use(cors());
@@ -35,24 +29,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(morgan('dev'));
 
-
 app.use(errorMiddleware);
-
 
 // مسارات API
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/posts', postRoutes);
 
-// إنشاء HTTP Server مع دعم Socket.io
-const server = http.createServer(app);
-const io = new SocketIOServer(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-  }
-});
-
-// تشغيل Socket.io
-setupSocket(io);
+app.use(limiter);
 
 // الاتصال بقاعدة البيانات
 connectDB();
